@@ -6,14 +6,23 @@ require('codemirror/mode/xml/xml');
 require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/continuelist');
 
+var FORMATS = {
+	h1: { before: '# ' },
+	h2: { before: '## ' },
+	h3: { before: '### ' },
+	bold: { before: '**', after: '**' },
+	italic: { before: '_', after: '_' },
+	quote: { before: '> ' },
+	oList: { before: '1. '},
+	uList: { before: '* '}
+}
+
 function getCursorState(cm, pos) {
 	pos = pos || cm.getCursor('start');
 	var cs = {};
-	var token = cm.getTokenAt(pos);
+	var token = cs.token = cm.getTokenAt(pos);
 	if (!token.type) return cs;
 	var tokens = token.type.split(' ');
-	// console.log('tokens:');
-	// console.log(tokens);
 	tokens.forEach((t) => {
 		switch (t) {
 			case 'header-1':
@@ -52,9 +61,47 @@ function getCursorState(cm, pos) {
 			break;
 		}
 	});
-	// console.log('cursor state:');
-	// console.log(Object.keys(cs));
 	return cs;
+}
+
+function toggleBlock(cm, key){
+	var cs = getCursorState(cm);
+
+	var insertBefore = FORMATS[key].before;
+	var insertAfter = FORMATS[key].after || '';
+
+	var startPoint = cm.getCursor('start');
+	var endPoint = cm.getCursor('end');
+
+	if (cs[key]) {
+		var line = cm.getLine(startPoint.line);
+		var startPos = startPoint.ch;
+		while (startPos) {
+			if (line.substr(startPos, insertBefore.length) === insertBefore) {
+				break;
+			}
+			startPos--;
+		}
+		var endPos = endPoint.ch;
+		while (endPos <= line.length) {
+			if (line.substr(endPos, insertAfter.length) === insertAfter) {
+				break;
+			}
+			endPos++;
+		}
+		var start = line.slice(0, startPos);
+		var mid = line.slice(startPos + insertBefore.length, endPos);
+		var end = line.slice(endPos + insertAfter.length);
+		cm.replaceRange(start + mid + end, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
+		startPoint.ch -= insertBefore.length;
+		endPoint.ch -= insertAfter.length;
+	} else {
+		cm.replaceSelection(insertBefore + cm.getSelection() + insertAfter);
+		startPoint.ch += insertBefore.length;
+		endPoint.ch += insertAfter.length;
+	}
+	cm.setSelection(startPoint, endPoint);
+	cm.focus();
 }
 
 var MarkdownEditor = React.createClass({
@@ -128,12 +175,19 @@ var MarkdownEditor = React.createClass({
 	},
 
 	toggle: function(csKey) {
+		if (FORMATS[csKey]) {
+			toggleBlock(this.codeMirror, csKey);
+		}
+	},
+
+	removeLink: function() {
 
 	},
 
-	renderButton: function(csKey, label) {
+	renderButton: function(csKey, label, action) {
 		var className = classNames('MDEditor_toolbarButton', { 'MDEditor_toolbarButton--pressed': this.state.cs[csKey] });
-		return <div className={className} onClick={this.toggle.bind(this, csKey)}>{label}</div>;
+		if (!action) action = this.toggle.bind(this, csKey);
+		return <div className={className} onClick={action}>{label}</div>;
 	},
 
 	renderToolbar: function() {
@@ -148,6 +202,7 @@ var MarkdownEditor = React.createClass({
 				{this.renderButton('uList', 'ul')}
 				{this.renderButton('quote', 'q')}
 				{this.renderButton('link', 'a')}
+				{this.renderButton('link', 'x', this.removeLink)}
 			</div>
 		);
 	},
