@@ -180,10 +180,6 @@ var MarkdownEditor = React.createClass({
 			toggleBlock(this.codeMirror, csKey);
 		}
 	},
-
-	removeLink: function() {
-
-	},
 	
 	renderIcon: function(icon) {
 		return <span dangerouslySetInnerHTML={{__html: icon}} className="MDEditor_toolbarButton_icon" />
@@ -219,7 +215,6 @@ var MarkdownEditor = React.createClass({
 				{this.renderButton('uList', 'ul')}
 				{this.renderButton('quote', 'q')}
 				{this.renderButton('link', 'a')}
-				{this.renderButton('link', 'x', this.removeLink)}
 			</div>
 		);
 	},
