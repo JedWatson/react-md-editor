@@ -18,8 +18,9 @@
     "react": "^0.13.3"
   },
   "devDependencies": {
-    "react-component-gulp-tasks": "^0.7.0",
-    "gulp": "^3.8.11"
+    "gulp": "^3.8.11",
+    "marked": "^0.3.3",
+    "react-component-gulp-tasks": "^0.7.0"
   },
   "browserify-shim": {
     "react": "global:React"

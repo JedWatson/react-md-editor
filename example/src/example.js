@@ -1,5 +1,6 @@
-var React = require('react');
 var Editor = require('react-md-editor');
+var marked = require('marked');
+var React = require('react');
 
 var App = React.createClass({
 	getInitialState: function() {
@@ -12,8 +13,17 @@ var App = React.createClass({
 			code: newCode
 		});
 	},
+
 	render: function() {
-		return <Editor value={this.state.code} onChange={this.updateCode} />
+		var preview = marked(this.state.code);
+		return (
+			<div className="example">
+				<div className="editor">
+					<Editor value={this.state.code} onChange={this.updateCode} />
+				</div>
+				<div className="preview" dangerouslySetInnerHTML={{__html: preview}} />
+			</div>
+		);
 	}
 });
 
