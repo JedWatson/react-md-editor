@@ -1,6 +1,7 @@
 var classNames = require('classnames');
 var CM = require('codemirror');
 var React = require('react');
+var Icons = require('./icons');
 
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/markdown/markdown');
@@ -183,11 +184,27 @@ var MarkdownEditor = React.createClass({
 	removeLink: function() {
 
 	},
+	
+	renderIcon: function(icon) {
+		return <span dangerouslySetInnerHTML={{__html: icon}} className="MDEditor_toolbarButton_icon" />
+	},
 
 	renderButton: function(csKey, label, action) {
-		var className = classNames('MDEditor_toolbarButton', { 'MDEditor_toolbarButton--pressed': this.state.cs[csKey] });
 		if (!action) action = this.toggle.bind(this, csKey);
-		return <div className={className} onClick={action}>{label}</div>;
+
+		var isTextIcon = (csKey == 'h1' || csKey == 'h2' || csKey == 'h3');
+		var className = classNames('MDEditor_toolbarButton', {
+			'MDEditor_toolbarButton--pressed': this.state.cs[csKey]
+		}, ('MDEditor_toolbarButton--' + csKey) );
+
+		var labelClass = isTextIcon ? 'MDEditor_toolbarButton_label-icon' : 'MDEditor_toolbarButton_label';
+
+		return (
+			<button className={className} onClick={action} title={csKey}>
+				{isTextIcon ? null : this.renderIcon(Icons[csKey])}
+				<span className={labelClass}>{label}</span>
+			</button>
+		);
 	},
 
 	renderToolbar: function() {
