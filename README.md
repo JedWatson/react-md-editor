@@ -2,6 +2,8 @@
 
 A Markdown Editor for [React.js](http://facebook.github.io/react), built with [CodeMirror](https://codemirror.net).
 
+**This is a work in progress.** Format application and removal is not very robust, some formats are missing.
+
 
 ## Demo & Examples
 
