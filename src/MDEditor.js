@@ -206,7 +206,7 @@ var MarkdownEditor = React.createClass({
 				{this.renderButton('oList', 'ol')}
 				{this.renderButton('uList', 'ul')}
 				{this.renderButton('quote', 'q')}
-				{this.renderButton('link', 'a')}
+				{/*this.renderButton('link', 'a')*/}
 			</div>
 		);
 	},
