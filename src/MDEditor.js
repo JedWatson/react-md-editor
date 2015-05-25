@@ -8,15 +8,20 @@ require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/continuelist');
 
 var FORMATS = {
-	h1: { before: '# ' },
-	h2: { before: '## ' },
-	h3: { before: '### ' },
-	bold: { before: '**', after: '**' },
-	italic: { before: '_', after: '_' },
-	quote: { before: '> ' },
-	oList: { before: '1. '},
-	uList: { before: '* '}
-}
+	h1: { type: 'block', token: 'header-1', before: '# ' },
+	h2: { type: 'block', token: 'header-2', before: '## ' },
+	h3: { type: 'block', token: 'header-3', before: '### ' },
+	bold: { type: 'inline', token: 'strong', before: '**', after: '**' },
+	italic: { type: 'inline', token: 'em', before: '_', after: '_' },
+	quote: { type: 'block', token: 'quote', before: '> ' },
+	oList: { type: 'block', before: '1. ' },
+	uList: { type: 'block', before: '* ' }
+};
+
+var FORMAT_TOKENS = {};
+Object.keys(FORMATS).forEach((key) => {
+	if (FORMATS[key].token) FORMAT_TOKENS[FORMATS[key].token] = key;
+});
 
 function getCursorState(cm, pos) {
 	pos = pos || cm.getCursor('start');
@@ -25,25 +30,11 @@ function getCursorState(cm, pos) {
 	if (!token.type) return cs;
 	var tokens = token.type.split(' ');
 	tokens.forEach((t) => {
+		if (FORMAT_TOKENS[t]) {
+			cs[FORMAT_TOKENS[t]] = true;
+			return;
+		}
 		switch (t) {
-			case 'header-1':
-				cs.h1 = true;
-			break;
-			case 'header-2':
-				cs.h2 = true;
-			break;
-			case 'header-3':
-				cs.h3 = true;
-			break;
-			case 'strong':
-				cs.bold = true;
-			break;
-			case 'quote':
-				cs.quote = true;
-			break;
-			case 'em':
-				cs.italic = true;
-			break;
 			case 'link':
 				cs.link = true;
 				cs.link_label = true;
@@ -65,11 +56,12 @@ function getCursorState(cm, pos) {
 	return cs;
 }
 
-function toggleBlock(cm, key){
+function applyFormat(cm, key){
 	var cs = getCursorState(cm);
+	var format = FORMATS[key];
 
-	var insertBefore = FORMATS[key].before;
-	var insertAfter = FORMATS[key].after || '';
+	var insertBefore = format.before;
+	var insertAfter = format.after || '';
 
 	var startPoint = cm.getCursor('start');
 	var endPoint = cm.getCursor('end');
@@ -177,7 +169,7 @@ var MarkdownEditor = React.createClass({
 
 	toggle: function(csKey) {
 		if (FORMATS[csKey]) {
-			toggleBlock(this.codeMirror, csKey);
+			applyFormat(this.codeMirror, csKey);
 		}
 	},
 	
