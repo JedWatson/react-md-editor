@@ -163,10 +163,6 @@ var MarkdownEditor = React.createClass({
 		this.props.onChange && this.props.onChange(newValue);
 	},
 
-	fieldValueChanged: function(e) {
-		// console.log("field changed");
-	},
-
 	toggle: function(csKey) {
 		if (FORMATS[csKey]) {
 			applyFormat(this.codeMirror, csKey);
