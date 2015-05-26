@@ -1,12 +1,12 @@
 const FORMATS = {
-	h1: { type: 'block', token: 'header-1', before: '# ', placeholder: 'Heading' },
-	h2: { type: 'block', token: 'header-2', before: '## ', placeholder: 'Heading' },
-	h3: { type: 'block', token: 'header-3', before: '### ', placeholder: 'Heading' },
+	h1: { type: 'block', token: 'header-1', before: '#', re: /^#\s+/, placeholder: 'Heading' },
+	h2: { type: 'block', token: 'header-2', before: '##', re: /^##\s+/, placeholder: 'Heading' },
+	h3: { type: 'block', token: 'header-3', before: '###', re: /^###\s+/, placeholder: 'Heading' },
 	bold: { type: 'inline', token: 'strong', before: '**', after: '**', placeholder: 'bold text' },
 	italic: { type: 'inline', token: 'em', before: '_', after: '_', placeholder: 'italic text' },
-	quote: { type: 'block', token: 'quote', before: '> ', placeholder: 'quote' },
-	oList: { type: 'block', before: '1. ', placeholder: 'List' },
-	uList: { type: 'block', before: '* ', placeholder: 'List' }
+	quote: { type: 'block', token: 'quote', before: '>', placeholder: 'quote' },
+	oList: { type: 'block', before: '1. ', re: /^\d+\.\s+/, placeholder: 'List' },
+	uList: { type: 'block', before: '* ', re: /^[\*\-]\s+/, placeholder: 'List' }
 };
 
 const FORMAT_TOKENS = {};
@@ -96,12 +96,18 @@ var operations = {
 	blockApply(cm, format) {
 		var startPoint = cm.getCursor('start');
 		var line = cm.getLine(startPoint.line);
-		var text = format.before + (line.length ? line : format.placeholder);
+		var text = format.before + ' ' + (line.length ? line : format.placeholder);
 		cm.replaceRange(text, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
-		cm.setSelection({ line: startPoint.line, ch: format.before.length }, { line: startPoint.line, ch: text.length });
+		cm.setSelection({ line: startPoint.line, ch: format.before.length + 1 }, { line: startPoint.line, ch: text.length });
 		cm.focus();
 	},
 	blockRemove(cm, format) {
-		// TODO
+		var startPoint = cm.getCursor('start');
+		var line = cm.getLine(startPoint.line);
+		var text = line.replace(format.re, '');
+		console.log(text);
+		cm.replaceRange(text, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
+		cm.setSelection({ line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: text.length });
+		cm.focus();
 	}
 };
