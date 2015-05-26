@@ -4,7 +4,7 @@ const FORMATS = {
 	h3: { type: 'block', token: 'header-3', before: '###', re: /^###\s+/, placeholder: 'Heading' },
 	bold: { type: 'inline', token: 'strong', before: '**', after: '**', placeholder: 'bold text' },
 	italic: { type: 'inline', token: 'em', before: '_', after: '_', placeholder: 'italic text' },
-	quote: { type: 'block', token: 'quote', before: '>', placeholder: 'quote' },
+	quote: { type: 'block', token: 'quote', re: /^\>\s+/, before: '>', placeholder: 'quote' },
 	oList: { type: 'block', before: '1. ', re: /^\d+\.\s+/, placeholder: 'List' },
 	uList: { type: 'block', before: '* ', re: /^[\*\-]\s+/, placeholder: 'List' }
 };
