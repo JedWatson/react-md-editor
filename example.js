@@ -26,6 +26,11 @@ var App = React.createClass({
 			{ className: 'example' },
 			React.createElement(
 				'div',
+				{ className: 'hint' },
+				'The editor is below, with default options. This example also uses marked to generate the preview on the right as you type.'
+			),
+			React.createElement(
+				'div',
 				{ className: 'editor' },
 				React.createElement(Editor, { value: this.state.code, onChange: this.updateCode })
 			),
