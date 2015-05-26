@@ -1,12 +1,12 @@
 const FORMATS = {
-	h1: { type: 'block', token: 'header-1', before: '# ' },
-	h2: { type: 'block', token: 'header-2', before: '## ' },
-	h3: { type: 'block', token: 'header-3', before: '### ' },
-	bold: { type: 'inline', token: 'strong', before: '**', after: '**' },
-	italic: { type: 'inline', token: 'em', before: '_', after: '_' },
-	quote: { type: 'block', token: 'quote', before: '> ' },
-	oList: { type: 'block', before: '1. ' },
-	uList: { type: 'block', before: '* ' }
+	h1: { type: 'block', token: 'header-1', before: '# ', placeholder: 'Heading' },
+	h2: { type: 'block', token: 'header-2', before: '## ', placeholder: 'Heading' },
+	h3: { type: 'block', token: 'header-3', before: '### ', placeholder: 'Heading' },
+	bold: { type: 'inline', token: 'strong', before: '**', after: '**', placeholder: 'bold text' },
+	italic: { type: 'inline', token: 'em', before: '_', after: '_', placeholder: 'italic text' },
+	quote: { type: 'block', token: 'quote', before: '> ', placeholder: 'quote' },
+	oList: { type: 'block', before: '1. ', placeholder: 'List' },
+	uList: { type: 'block', before: '* ', placeholder: 'List' }
 };
 
 const FORMAT_TOKENS = {};
@@ -50,40 +50,53 @@ export function getCursorState(cm, pos) {
 export function applyFormat(cm, key){
 	var cs = getCursorState(cm);
 	var format = FORMATS[key];
+	operations[format.type + (cs[key] ? 'Remove' : 'Apply')](cm, format);
+}
 
-	var insertBefore = format.before;
-	var insertAfter = format.after || '';
+var operations = {
+	inlineApply(cm, format) {
+		var startPoint = cm.getCursor('start');
+		var endPoint = cm.getCursor('end');
 
-	var startPoint = cm.getCursor('start');
-	var endPoint = cm.getCursor('end');
+		cm.replaceSelection(format.before + cm.getSelection() + format.after);
 
-	if (cs[key]) {
+		startPoint.ch += format.before.length;
+		endPoint.ch += format.after.length;
+		cm.setSelection(startPoint, endPoint);
+		cm.focus();
+	},
+	inlineRemove(cm, format) {
+		var startPoint = cm.getCursor('start');
+		var endPoint = cm.getCursor('end');
 		var line = cm.getLine(startPoint.line);
+
 		var startPos = startPoint.ch;
 		while (startPos) {
-			if (line.substr(startPos, insertBefore.length) === insertBefore) {
+			if (line.substr(startPos, format.before.length) === format.before) {
 				break;
 			}
 			startPos--;
 		}
+
 		var endPos = endPoint.ch;
 		while (endPos <= line.length) {
-			if (line.substr(endPos, insertAfter.length) === insertAfter) {
+			if (line.substr(endPos, format.after.length) === format.after) {
 				break;
 			}
 			endPos++;
 		}
+
 		var start = line.slice(0, startPos);
-		var mid = line.slice(startPos + insertBefore.length, endPos);
-		var end = line.slice(endPos + insertAfter.length);
+		var mid = line.slice(startPos + format.before.length, endPos);
+		var end = line.slice(endPos + format.after.length);
 		cm.replaceRange(start + mid + end, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
-		startPoint.ch -= insertBefore.length;
-		endPoint.ch -= insertAfter.length;
-	} else {
-		cm.replaceSelection(insertBefore + cm.getSelection() + insertAfter);
-		startPoint.ch += insertBefore.length;
-		endPoint.ch += insertAfter.length;
+		cm.setSelection({ line: startPoint.line, ch: start.length }, { line: startPoint.line, ch: (start + mid).length });
+		cm.focus();
+	},
+	blockApply(cm, format) {
+		// TODO
+	},
+	blockRemove(cm, format) {
+		// TODO
 	}
-	cm.setSelection(startPoint, endPoint);
-	cm.focus();
-}
+};
