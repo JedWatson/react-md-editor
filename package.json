@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "gulp": "^3.8.11",
+    "happiness": "^1.0.5",
     "marked": "^0.3.3",
     "react-component-gulp-tasks": "^0.7.0"
   },
@@ -32,9 +33,16 @@
     "release": "gulp release",
     "start": "gulp dev",
     "test": "echo \"no tests yet\" && exit 0",
+    "lint": "happiness",
     "watch": "gulp watch:lib"
   },
-  "readmeFilename": "README.md",
+  "happiness": {
+    "ignore": [
+      "**/.publish/**",
+      "**/dist/**",
+      "**/lib/**"
+    ]
+  },
   "keywords": [
     "react",
     "react-component",
