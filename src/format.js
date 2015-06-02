@@ -105,7 +105,6 @@ var operations = {
 		var startPoint = cm.getCursor('start');
 		var line = cm.getLine(startPoint.line);
 		var text = line.replace(format.re, '');
-		console.log(text);
 		cm.replaceRange(text, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
 		cm.setSelection({ line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: text.length });
 		cm.focus();
