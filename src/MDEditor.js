@@ -10,14 +10,14 @@ require('codemirror/addon/edit/continuelist');
 import {getCursorState, applyFormat} from "./format.js";
 
 var MarkdownEditor = React.createClass({
-	
+
 	getInitialState() {
 		return {
 			isFocused: false,
 			cs: {}
 		};
 	},
-	
+
 	componentDidMount() {
 		this.codeMirror = CM.fromTextArea(this.refs.codemirror.getDOMNode(), this.getOptions());
 		this.codeMirror.on('change', this.codemirrorValueChanged);
@@ -35,14 +35,14 @@ var MarkdownEditor = React.createClass({
 			tabSize: '2'
 		}, this.props.options);
 	},
-	
+
 	componentWillUnmount() {
 		// todo: is there a lighter-weight way to remove the cm instance?
 		if (this.codeMirror) {
 			this.codeMirror.toTextArea();
 		}
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		if (this.codeMirror && this._currentCodemirrorValue !== nextProps.value) {
 			this.codeMirror.setValue(nextProps.value);
@@ -52,13 +52,13 @@ var MarkdownEditor = React.createClass({
 	getCodeMirror() {
 		return this.codeMirror;
 	},
-	
+
 	focus() {
 		if (this.codeMirror) {
 			this.codeMirror.focus();
 		}
 	},
-	
+
 	focusChanged(focused) {
 		this.setState({
 			isFocused: focused
@@ -68,7 +68,7 @@ var MarkdownEditor = React.createClass({
 	updateCursorState() {
 		this.setState({ cs: getCursorState(this.codeMirror) });
 	},
-	
+
 	codemirrorValueChanged(doc, change) {
 		var newValue = doc.getValue();
 		this._currentCodemirrorValue = newValue;
@@ -78,7 +78,7 @@ var MarkdownEditor = React.createClass({
 	toggleFormat(formatKey) {
 		applyFormat(this.codeMirror, formatKey);
 	},
-	
+
 	renderIcon(icon) {
 		return <span dangerouslySetInnerHTML={{__html: icon}} className="MDEditor_toolbarButton_icon" />;
 	},
@@ -116,7 +116,7 @@ var MarkdownEditor = React.createClass({
 			</div>
 		);
 	},
-	
+
 	render() {
 		var editorClassName = classNames('MDEditor_editor', { 'MDEditor_editor--focused': this.state.isFocused });
 		return (
@@ -128,7 +128,7 @@ var MarkdownEditor = React.createClass({
 			</div>
 		);
 	}
-	
+
 });
 
 export default MarkdownEditor;

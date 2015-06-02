@@ -3,7 +3,7 @@ var initGulpTasks = require('react-component-gulp-tasks');
 
 /**
  * Tasks are added by the react-component-gulp-tasks package
- * 
+ *
  * See https://github.com/JedWatson/react-component-gulp-tasks
  * for documentation.
  */
