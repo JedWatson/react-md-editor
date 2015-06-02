@@ -1,6 +1,6 @@
 {
   "name": "react-md-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Markdown Editor",
   "main": "lib/MDEditor.js",
   "author": "Jed Watson",
