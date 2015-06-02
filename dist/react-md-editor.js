@@ -22,6 +22,13 @@ require('codemirror/addon/edit/continuelist');
 var MarkdownEditor = React.createClass({
 	displayName: 'MarkdownEditor',
 
+	propTypes: {
+		onChange: React.PropTypes.func,
+		options: React.PropTypes.object,
+		path: React.PropTypes.string,
+		value: React.PropTypes.string
+	},
+
 	getInitialState: function getInitialState() {
 		return {
 			isFocused: false,
@@ -99,7 +106,8 @@ var MarkdownEditor = React.createClass({
 
 		var isTextIcon = formatKey === 'h1' || formatKey === 'h2' || formatKey === 'h3';
 		var className = classNames('MDEditor_toolbarButton', {
-			'MDEditor_toolbarButton--pressed': this.state.cs[formatKey] }, 'MDEditor_toolbarButton--' + formatKey);
+			'MDEditor_toolbarButton--pressed': this.state.cs[formatKey]
+		}, 'MDEditor_toolbarButton--' + formatKey);
 
 		var labelClass = isTextIcon ? 'MDEditor_toolbarButton_label-icon' : 'MDEditor_toolbarButton_label';
 
@@ -10404,7 +10412,6 @@ var operations = {
 		var startPoint = cm.getCursor('start');
 		var line = cm.getLine(startPoint.line);
 		var text = line.replace(format.re, '');
-		console.log(text);
 		cm.replaceRange(text, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
 		cm.setSelection({ line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: text.length });
 		cm.focus();
@@ -10425,7 +10432,8 @@ module.exports = {
 	link: require('./link'),
 	uList: require('./uList'),
 	oList: require('./oList'),
-	quote: require('./quote') };
+	quote: require('./quote')
+};
 
 },{"./bold":8,"./italic":10,"./link":11,"./oList":12,"./quote":13,"./uList":14}],10:[function(require,module,exports){
 'use strict';
