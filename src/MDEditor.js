@@ -7,18 +7,18 @@ require('codemirror/mode/xml/xml');
 require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/continuelist');
 
-import {getCursorState, applyFormat} from "./format.js";
+import { getCursorState, applyFormat } from './format.js';
 
 var MarkdownEditor = React.createClass({
 
-	getInitialState() {
+	getInitialState () {
 		return {
 			isFocused: false,
 			cs: {}
 		};
 	},
 
-	componentDidMount() {
+	componentDidMount () {
 		this.codeMirror = CM.fromTextArea(this.refs.codemirror.getDOMNode(), this.getOptions());
 		this.codeMirror.on('change', this.codemirrorValueChanged);
 		this.codeMirror.on('focus', this.focusChanged.bind(this, true));
@@ -27,7 +27,7 @@ var MarkdownEditor = React.createClass({
 		this._currentCodemirrorValue = this.props.value;
 	},
 
-	getOptions() {
+	getOptions () {
 		return Object.assign({
 			mode: 'markdown',
 			lineNumbers: false,
@@ -36,60 +36,60 @@ var MarkdownEditor = React.createClass({
 		}, this.props.options);
 	},
 
-	componentWillUnmount() {
+	componentWillUnmount () {
 		// todo: is there a lighter-weight way to remove the cm instance?
 		if (this.codeMirror) {
 			this.codeMirror.toTextArea();
 		}
 	},
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps (nextProps) {
 		if (this.codeMirror && this._currentCodemirrorValue !== nextProps.value) {
 			this.codeMirror.setValue(nextProps.value);
 		}
 	},
 
-	getCodeMirror() {
+	getCodeMirror () {
 		return this.codeMirror;
 	},
 
-	focus() {
+	focus () {
 		if (this.codeMirror) {
 			this.codeMirror.focus();
 		}
 	},
 
-	focusChanged(focused) {
+	focusChanged (focused) {
 		this.setState({
 			isFocused: focused
 		});
 	},
 
-	updateCursorState() {
+	updateCursorState () {
 		this.setState({ cs: getCursorState(this.codeMirror) });
 	},
 
-	codemirrorValueChanged(doc, change) {
+	codemirrorValueChanged (doc, change) {
 		var newValue = doc.getValue();
 		this._currentCodemirrorValue = newValue;
 		this.props.onChange && this.props.onChange(newValue);
 	},
 
-	toggleFormat(formatKey) {
+	toggleFormat (formatKey) {
 		applyFormat(this.codeMirror, formatKey);
 	},
 
-	renderIcon(icon) {
+	renderIcon (icon) {
 		return <span dangerouslySetInnerHTML={{__html: icon}} className="MDEditor_toolbarButton_icon" />;
 	},
 
-	renderButton(formatKey, label, action) {
+	renderButton (formatKey, label, action) {
 		if (!action) action = this.toggleFormat.bind(this, formatKey);
 
 		var isTextIcon = (formatKey === 'h1' || formatKey === 'h2' || formatKey === 'h3');
 		var className = classNames('MDEditor_toolbarButton', {
-			'MDEditor_toolbarButton--pressed': this.state.cs[formatKey],
-		}, ('MDEditor_toolbarButton--' + formatKey) );
+			'MDEditor_toolbarButton--pressed': this.state.cs[formatKey]
+		}, ('MDEditor_toolbarButton--' + formatKey));
 
 		var labelClass = isTextIcon ? 'MDEditor_toolbarButton_label-icon' : 'MDEditor_toolbarButton_label';
 
@@ -101,7 +101,7 @@ var MarkdownEditor = React.createClass({
 		);
 	},
 
-	renderToolbar() {
+	renderToolbar () {
 		return (
 			<div className="MDEditor_toolbar">
 				{this.renderButton('h1', 'h1')}
@@ -117,7 +117,7 @@ var MarkdownEditor = React.createClass({
 		);
 	},
 
-	render() {
+	render () {
 		var editorClassName = classNames('MDEditor_editor', { 'MDEditor_editor--focused': this.state.isFocused });
 		return (
 			<div className="MDEditor">
