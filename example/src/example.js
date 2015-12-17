@@ -1,6 +1,7 @@
 var Editor = require('react-md-editor');
 var marked = require('marked');
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var App = React.createClass({
 	getInitialState () {
@@ -28,4 +29,4 @@ var App = React.createClass({
 	}
 });
 
-React.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));
