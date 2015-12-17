@@ -10331,6 +10331,7 @@ var _formatJs = require('./format.js');
 var classNames = require('classnames');
 var CM = require('codemirror');
 var React = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+var ReactDOM = require('react-dom');
 var Icons = require('./icons');
 
 require('codemirror/mode/xml/xml');
@@ -10355,7 +10356,7 @@ var MarkdownEditor = React.createClass({
 	},
 
 	componentDidMount: function componentDidMount() {
-		this.codeMirror = CM.fromTextArea(this.refs.codemirror.getDOMNode(), this.getOptions());
+		this.codeMirror = CM.fromTextArea(ReactDOM.findDOMNode(this.refs.codemirror), this.getOptions());
 		this.codeMirror.on('change', this.codemirrorValueChanged);
 		this.codeMirror.on('focus', this.focusChanged.bind(this, true));
 		this.codeMirror.on('blur', this.focusChanged.bind(this, false));
@@ -10477,7 +10478,7 @@ module.exports = exports['default'];
 /*this.renderButton('link', 'a')*/
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./format.js":7,"./icons":9,"classnames":undefined,"codemirror":2,"codemirror/addon/edit/continuelist":1,"codemirror/mode/markdown/markdown":3,"codemirror/mode/xml/xml":5}],7:[function(require,module,exports){
+},{"./format.js":7,"./icons":9,"classnames":undefined,"codemirror":2,"codemirror/addon/edit/continuelist":1,"codemirror/mode/markdown/markdown":3,"codemirror/mode/xml/xml":5,"react-dom":undefined}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
