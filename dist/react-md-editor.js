@@ -10397,9 +10397,7 @@ var MarkdownEditor = React.createClass({
 	},
 
 	focusChanged: function focusChanged(focused) {
-		this.setState({
-			isFocused: focused
-		});
+		this.setState({ isFocused: focused });
 	},
 
 	updateCursorState: function updateCursorState() {
