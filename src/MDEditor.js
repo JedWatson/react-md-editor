@@ -1,7 +1,7 @@
 var classNames = require('classnames');
 var CM = require('codemirror');
 var React = require('react');
-var ReactDOM = require('react-dom')
+var ReactDOM = require('react-dom');
 var Icons = require('./icons');
 
 require('codemirror/mode/xml/xml');
@@ -16,13 +16,13 @@ var MarkdownEditor = React.createClass({
 		onChange: React.PropTypes.func,
 		options: React.PropTypes.object,
 		path: React.PropTypes.string,
-		value: React.PropTypes.string
+		value: React.PropTypes.string,
 	},
 
 	getInitialState () {
 		return {
 			isFocused: false,
-			cs: {}
+			cs: {},
 		};
 	},
 
@@ -40,7 +40,7 @@ var MarkdownEditor = React.createClass({
 			mode: 'markdown',
 			lineNumbers: false,
 			indentWithTabs: true,
-			tabSize: '2'
+			tabSize: '2',
 		}, this.props.options);
 	},
 
@@ -68,9 +68,7 @@ var MarkdownEditor = React.createClass({
 	},
 
 	focusChanged (focused) {
-		this.setState({
-			isFocused: focused
-		});
+		this.setState({ isFocused: focused });
 	},
 
 	updateCursorState () {

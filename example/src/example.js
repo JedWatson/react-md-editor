@@ -14,7 +14,6 @@ var App = React.createClass({
 			code: newCode
 		});
 	},
-
 	render () {
 		var preview = marked(this.state.code);
 		return (

@@ -6,7 +6,7 @@ const FORMATS = {
 	italic: { type: 'inline', token: 'em', before: '_', after: '_', placeholder: 'italic text' },
 	quote: { type: 'block', token: 'quote', re: /^\>\s+/, before: '>', placeholder: 'quote' },
 	oList: { type: 'block', before: '1. ', re: /^\d+\.\s+/, placeholder: 'List' },
-	uList: { type: 'block', before: '* ', re: /^[\*\-]\s+/, placeholder: 'List' }
+	uList: { type: 'block', before: '* ', re: /^[\*\-]\s+/, placeholder: 'List' },
 };
 
 const FORMAT_TOKENS = {};
@@ -108,5 +108,5 @@ var operations = {
 		cm.replaceRange(text, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
 		cm.setSelection({ line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: text.length });
 		cm.focus();
-	}
+	},
 };
