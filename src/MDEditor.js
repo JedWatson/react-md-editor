@@ -81,7 +81,8 @@ var MarkdownEditor = React.createClass({
 		this.props.onChange && this.props.onChange(newValue);
 	},
 
-	toggleFormat (formatKey) {
+	toggleFormat (formatKey, e) {
+		e.preventDefault();
 		applyFormat(this.codeMirror, formatKey);
 	},
 
