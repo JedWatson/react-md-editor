@@ -13,17 +13,17 @@
     "url": "https://github.com/JedWatson/react-md-editor/issues"
   },
   "dependencies": {
-    "classnames": "^2.2.1",
-    "codemirror": "^5.9.0"
+    "classnames": "^2.2.5",
+    "codemirror": "^5.18.2"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0"
   },
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "happiness": "^1.0.7",
-    "marked": "^0.3.5",
+    "gulp": "^3.9.1",
+    "happiness": "^7.1.2",
+    "marked": "^0.3.6",
     "react-component-gulp-tasks": "^0.7.7"
   },
   "browserify-shim": {
