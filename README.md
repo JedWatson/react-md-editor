@@ -32,7 +32,7 @@ npm install codemirror --save
 
 ## Usage
 
-```
+```js
 var React = require('react'),
 	Editor = require('react-md-editor');
 
@@ -65,5 +65,4 @@ See the [CodeMirror API Docs](https://codemirror.net/doc/manual.html#api) for th
 
 ### License
 
-MIT. Copyright (c) 2015 Jed Watson.
-
+MIT. Copyright (c) 2016 Jed Watson.
