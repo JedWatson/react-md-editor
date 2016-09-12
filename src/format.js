@@ -17,12 +17,12 @@ Object.keys(FORMATS).forEach(key => {
 });
 
 export function getCursorState (cm) {
-
 	var cursor = cm.getCursor();
 	var lineTokens = cm.getLineTokens(cursor.line);
 	var prevLineTokens = [];
 	var curToken = null;
 	var token = null;
+
 	while (curToken = lineTokens.shift()) {
 		if (cursor.ch >= curToken.start && cursor.ch <= curToken.end) {
 			token = curToken;
@@ -30,6 +30,7 @@ export function getCursorState (cm) {
 		}
 		prevLineTokens.push(curToken);
 	}
+
 	var tokenTypes = (token) ? getTokenTypes(token, prevLineTokens) : [];
 	var cs = {token};
 	tokenTypes.forEach(t => cs[t] = true);
@@ -38,9 +39,11 @@ export function getCursorState (cm) {
 
 var getTokenTypes = (token, previousTokens) => {
 	var tokenTypes = [];
+
 	if (!token.type) {
 		return [];
 	}
+
 	token.type.split(' ').forEach(t => {
 		switch (t) {
 			case 'link':
@@ -72,6 +75,7 @@ var getTokenTypes = (token, previousTokens) => {
 				break;
 		}
 	});
+
 	return tokenTypes;
 };
 
