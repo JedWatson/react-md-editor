@@ -7,6 +7,8 @@ const FORMATS = {
 	quote: { type: 'block', token: 'quote', re: /^\>\s+/, before: '>', placeholder: 'quote' },
 	oList: { type: 'block', before: '1. ', re: /^\d+\.\s+/, placeholder: 'List' },
 	uList: { type: 'block', before: '* ', re: /^[\*\-]\s+/, placeholder: 'List' },
+	link: { type: 'inline', token: 'link', before: '[link](', after: ')', re: /\[(?:[^\]]+)\]\(([^)]+)\)/, placeholder: 'Link' },
+	image: { type: 'inline', token: 'image', before: '![Alt Text](', after: ')', re: /\!\[(?:[^\]]+)\]\(([^)]+)\)/, placeholder: 'Image' }
 };
 
 const FORMAT_TOKENS = {};
@@ -14,38 +16,64 @@ Object.keys(FORMATS).forEach(key => {
 	if (FORMATS[key].token) FORMAT_TOKENS[FORMATS[key].token] = key;
 });
 
-export function getCursorState (cm, pos) {
-	pos = pos || cm.getCursor('start');
-	var cs = {};
-	var token = cs.token = cm.getTokenAt(pos);
-	if (!token.type) return cs;
-	var tokens = token.type.split(' ');
-	tokens.forEach(t => {
-		if (FORMAT_TOKENS[t]) {
-			cs[FORMAT_TOKENS[t]] = true;
-			return;
-		}
-		switch (t) {
-			case 'link':
-				cs.link = true;
-				cs.link_label = true;
-			break;
-			case 'string':
-				cs.link = true;
-				cs.link_href = true;
-			break;
-			case 'variable-2':
-				var text = cm.getLine(pos.line);
-				if (/^\s*\d+\.\s/.test(text)) {
-					cs.oList = true;
-				} else {
-					cs.uList = true;
-				}
+export function getCursorState (cm) {
+
+	var cursor = cm.getCursor();
+	var lineTokens = cm.getLineTokens(cursor.line);
+	var prevLineTokens = [];
+	var curToken = null;
+	var token = null;
+	while (curToken = lineTokens.shift()) {
+		if (cursor.ch >= curToken.start && cursor.ch <= curToken.end) {
+			token = curToken;
 			break;
 		}
-	});
+		prevLineTokens.push(curToken);
+	}
+	var tokenTypes = (token) ? getTokenTypes(token, prevLineTokens) : [];
+	var cs = {token};
+	tokenTypes.forEach(t => cs[t] = true);
 	return cs;
 }
+
+var getTokenTypes = (token, previousTokens) => {
+	var tokenTypes = [];
+	if (!token.type) {
+		return [];
+	}
+	token.type.split(' ').forEach(t => {
+		switch (t) {
+			case 'link':
+				// if already identified as image, don't include link
+				if (tokenTypes.indexOf('image') === -1) {
+					tokenTypes.push('link');
+				}
+				break;
+			case 'image':
+				tokenTypes.push('image');
+				break;
+			case 'string':
+				var prevToken = previousTokens.pop();
+				var returnTokens = getTokenTypes(prevToken, previousTokens);
+				tokenTypes.push(...returnTokens);
+				break;
+			case 'variable-2':
+				var firstToken = (previousTokens.length > 0) ? previousTokens.shift() : token;
+				if (/^\s*\d+\.\s/.test(firstToken.string)) {
+					tokenTypes.push('oList');
+				} else {
+					tokenTypes.push('uList');
+				}
+				break;
+			default:
+				if (FORMAT_TOKENS[t]) {
+					tokenTypes.push(FORMAT_TOKENS[t]);
+				}
+				break;
+		}
+	});
+	return tokenTypes;
+};
 
 export function applyFormat (cm, key) {
 	var cs = getCursorState(cm);
@@ -69,6 +97,14 @@ var operations = {
 		var startPoint = cm.getCursor('start');
 		var endPoint = cm.getCursor('end');
 		var line = cm.getLine(startPoint.line);
+
+		if (format.hasOwnProperty('re')) {
+			var text = line.replace(format.re, '$1');
+			cm.replaceRange(text, { line: startPoint.line, ch: 0 }, { line: startPoint.line, ch: line.length + 1 });
+			cm.setSelection({ line: startPoint.line, ch: startPoint.ch }, { line: startPoint.line, ch: startPoint.ch });
+			cm.focus();
+			return;
+		}
 
 		var startPos = startPoint.ch;
 		while (startPos) {
