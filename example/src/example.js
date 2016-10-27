@@ -16,11 +16,12 @@ var App = React.createClass({
 	},
 	render () {
 		var preview = marked(this.state.code);
+		var options = { buttonType: 'button' };
 		return (
 			<div className="example">
 				<div className="hint">The editor is below, with default options. This example also uses marked to generate the preview on the right as you type.</div>
 				<div className="editor">
-					<Editor value={this.state.code} onChange={this.updateCode} />
+					<Editor value={this.state.code} onChange={this.updateCode} options={options} />
 				</div>
 				<div className="preview" dangerouslySetInnerHTML={{__html: preview}} />
 			</div>
