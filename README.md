@@ -21,7 +21,11 @@ Then open [`localhost:8000`](http://localhost:8000) in a browser.
 
 ## Installation
 
-The easiest way to use codemirror is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
+```
+npm install react-md-editor --save
+```
+
+And you may need to install codemirror. The easiest way to use codemirror is to install it from NPM and include it in your own React build process (using [Browserify](http://browserify.org), [Webpack](http://webpack.github.io/), etc).
 
 You can also use the standalone build by including `dist/codemirror.js` in your page. If you use this, make sure you have already included React, and it is available as a global variable.
 
@@ -29,12 +33,15 @@ You can also use the standalone build by including `dist/codemirror.js` in your 
 npm install codemirror --save
 ```
 
-
 ## Usage
 
 ```js
 var React = require('react'),
 	Editor = require('react-md-editor');
+
+// you may need import css in your js if you use webpack or tools can build css
+// or @import in your less file like [the example.less](https://github.com/JedWatson/react-md-editor/blob/master/example/src/example.less#L77)
+// import 'react-md-editor/dist/react-md-editor.min.css';
 
 var App = React.createClass({
 	getInitialState: function() {
