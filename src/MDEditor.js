@@ -17,6 +17,7 @@ var MarkdownEditor = React.createClass({
 		options: React.PropTypes.object,
 		path: React.PropTypes.string,
 		value: React.PropTypes.string,
+		className: React.PropTypes.string,
 	},
 
 	getInitialState () {
@@ -125,9 +126,10 @@ var MarkdownEditor = React.createClass({
 	},
 
 	render () {
+		var editorWrapperClassName = classNames('MDEditor', this.props.className);
 		var editorClassName = classNames('MDEditor_editor', { 'MDEditor_editor--focused': this.state.isFocused });
 		return (
-			<div className="MDEditor">
+			<div className={editorWrapperClassName}>
 				{this.renderToolbar()}
 				<div className={editorClassName}>
 					<textarea ref="codemirror" name={this.props.path} defaultValue={this.props.value} autoComplete="off" />
