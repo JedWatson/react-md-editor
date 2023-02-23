@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "codemirror": "^5.18.2"
+    "codemirror": "^5.18.2",
+    "prop-types": "^15.8.1"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
